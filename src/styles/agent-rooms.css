@@ -1,0 +1,222 @@
+/* ── AGENT ROOM (one per main agent) ────────────────────── */
+
+.agent-room {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid #252540;
+  border-radius: 6px;
+  position: relative;
+}
+
+.agent-room__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #252540;
+}
+
+.agent-room__title {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  color: #e8eefb;
+  letter-spacing: 0.5px;
+}
+
+.agent-room__badge {
+  font-family: 'Courier New', monospace;
+  font-size: 7px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+
+.agent-room__badge--main {
+  background: rgba(119, 173, 255, 0.15);
+  color: #77adff;
+  border: 1px solid rgba(119, 173, 255, 0.3);
+}
+
+.agent-room__badge--working {
+  background: rgba(0, 255, 159, 0.1);
+  color: #00FF9F;
+  border: 1px solid rgba(0, 255, 159, 0.2);
+}
+
+.agent-room__badge--idle {
+  background: rgba(255, 230, 109, 0.1);
+  color: #FFE66D;
+  border: 1px solid rgba(255, 230, 109, 0.2);
+}
+
+/* All desks in a room — single horizontal wrap grid filling the width */
+.agent-room__desks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* Main agent desk — creates a column container with its subagents */
+.agent-room__main-desk {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* Subagent desks — render below main with connector line */
+.agent-room__subagents {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.agent-room__subagents-label {
+  display: none;
+}
+
+.agent-room__subagents .pixel-desk {
+  width: 110px;
+  min-height: 130px;
+}
+
+/* Room grid — flex wrap so rooms shrink/grow with agent count */
+.agent-rooms-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Each room sizes itself based on content, min width for 1 agent */
+.agent-room {
+  flex: 1 1 auto;
+  min-width: 180px;
+  max-width: 100%;
+}
+
+/* ── KOKO 3-LEVEL HIERARCHY TREE ──────────────────────── */
+
+.koko-hierarchy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.koko-level {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.koko-level-label {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #5e7299;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* Vertical connector between levels */
+.koko-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #F97316;
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 0;
+}
+
+.koko-connector__line {
+  width: 2px;
+  height: 12px;
+  background: #F97316;
+  opacity: 0.5;
+}
+
+.koko-connector__arrow {
+  font-size: 10px;
+}
+
+/* Level 2 specialist column: specialist desk + its sub-subagents below */
+.koko-specialist-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.koko-specialist-col__label {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  color: #F97316;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* Horizontal branch line at Level 2 */
+.koko-branch {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.koko-branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: #F97316;
+  opacity: 0.3;
+}
+
+/* Sub-subagent row under a specialist */
+.koko-sub-subagents {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.koko-sub-subagents .pixel-desk {
+  width: 100px;
+  min-height: 110px;
+}
+
+/* Mobile: horizontal scroll, rooms snap to viewport */
+@media (max-width: 700px) {
+  .agent-rooms-grid {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .agent-room {
+    flex: 0 0 min(85vw, 320px);
+    scroll-snap-align: start;
+  }
+}

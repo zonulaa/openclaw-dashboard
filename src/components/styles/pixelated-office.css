@@ -1,0 +1,650 @@
+/* ============================================================
+   PIXELATED OFFICE - Retro DOS-inspired CSS
+   Grid unit: 8px | Font: Courier New | No rounded corners
+   ============================================================ */
+
+/* ── Fonts ──────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ── Root container ─────────────────────────────────────── */
+.pixel-office {
+  background: #1a1a2e;
+  font-family: 'Courier New', Courier, monospace;
+  min-height: 100vh;
+  padding: 16px;
+  color: #ffffff;
+  image-rendering: pixelated;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.pixel-office__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 2px solid #00FF9F;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  background: #0d0d1a;
+  box-shadow: 0 0 16px rgba(0, 255, 159, 0.3);
+}
+
+.pixel-office__title {
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 12px;
+  color: #00FF9F;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.pixel-office__subtitle {
+  font-size: 10px;
+  color: #6b7280;
+  letter-spacing: 1px;
+}
+
+/* ── Desk Grid (3x2) ─────────────────────────────────────── */
+.pixel-office__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .pixel-office__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .pixel-office__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Individual Desk ─────────────────────────────────────── */
+/* Base desk styles are in src/styles/pixelated-office.css   */
+/* These are fallback overrides for the grid-only view       */
+.pixel-office .pixel-desk {
+  position: relative;
+  background: #0d0d1a;
+  border: 2px solid #2a2a4a;
+  padding: 16px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+  cursor: default;
+}
+
+.pixel-office .pixel-desk:hover {
+  border-color: #4a4a7a;
+}
+
+.pixel-office .pixel-desk--working {
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 1px #FF6B6B33;
+  animation: desk-glow-working 1.5s ease-in-out infinite;
+}
+
+.pixel-office .pixel-desk--idle {
+  border-color: #FFE66D;
+}
+
+.pixel-office .pixel-desk--thinking {
+  border-color: #A8E6CF;
+  animation: desk-glow-thinking 2s ease-in-out infinite;
+}
+
+.pixel-office .pixel-desk--empty {
+  border-color: #2a2a4a;
+  opacity: 0.7;
+}
+
+/* Desk surface (the wooden desk) */
+.pixel-desk__surface {
+  width: 100%;
+  height: 8px;
+  background: #8B7355;
+  margin-top: auto;
+  border-top: 2px solid #A68B6A;
+  position: relative;
+}
+
+.pixel-desk__surface::before {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  background: #6B5640;
+}
+
+.pixel-desk__surface::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #6B5640;
+}
+
+/* Chair */
+.pixel-desk__chair {
+  width: 32px;
+  height: 16px;
+  background: #2D3142;
+  border: 2px solid #3D4162;
+  margin-top: 4px;
+}
+
+/* Desk number label */
+.pixel-desk__number {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 9px;
+  color: #4a4a7a;
+  letter-spacing: 0;
+}
+
+/* ── Agent Sprite ─────────────────────────────────────────── */
+.pixel-agent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  flex: 1;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+}
+
+/* Head */
+.pixel-agent__head {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 2;
+}
+
+/* Body */
+.pixel-agent__body {
+  width: 32px;
+  height: 24px;
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Arms */
+.pixel-agent__arm-left,
+.pixel-agent__arm-right {
+  position: absolute;
+  width: 8px;
+  height: 16px;
+  top: 0;
+}
+
+.pixel-agent__arm-left {
+  left: -8px;
+  transform-origin: top right;
+}
+
+.pixel-agent__arm-right {
+  right: -8px;
+  transform-origin: top left;
+}
+
+/* Thought bubble */
+.pixel-agent__thought {
+  position: absolute;
+  top: -24px;
+  right: -8px;
+  background: #ffffff;
+  color: #000000;
+  font-size: 9px;
+  padding: 2px 4px;
+  border: 2px solid #cccccc;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  opacity: 0;
+  animation: thought-pulse 2s ease-in-out infinite;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.pixel-agent__thought::before {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 4px;
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  border: 2px solid #cccccc;
+  border-top: none;
+  border-left: none;
+}
+
+/* Desk label under agent */
+.pixel-desk__agent-name {
+  font-size: 9px;
+  color: #8da3cb;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0;
+}
+
+/* ── Status Badge ─────────────────────────────────────────── */
+.pixel-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0;
+  border: 2px solid;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.pixel-status--working {
+  background: rgba(255, 107, 107, 0.15);
+  border-color: #FF6B6B;
+  color: #FF6B6B;
+}
+
+.pixel-status--idle {
+  background: rgba(255, 230, 109, 0.15);
+  border-color: #FFE66D;
+  color: #FFE66D;
+}
+
+.pixel-status--thinking {
+  background: rgba(168, 230, 207, 0.15);
+  border-color: #A8E6CF;
+  color: #A8E6CF;
+}
+
+.pixel-status--empty {
+  background: rgba(74, 74, 122, 0.15);
+  border-color: #4a4a7a;
+  color: #4a4a7a;
+}
+
+.pixel-status__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 0;
+  display: inline-block;
+}
+
+.pixel-status--working .pixel-status__dot {
+  background: #FF6B6B;
+  animation: blink 0.5s step-end infinite;
+}
+
+.pixel-status--idle .pixel-status__dot {
+  background: #FFE66D;
+}
+
+.pixel-status--thinking .pixel-status__dot {
+  background: #A8E6CF;
+  animation: blink 1s ease-in-out infinite;
+}
+
+.pixel-status--empty .pixel-status__dot {
+  background: #4a4a7a;
+}
+
+/* ── Office Stats Bar ─────────────────────────────────────── */
+.pixel-stats {
+  border: 2px solid #2a2a4a;
+  padding: 8px 16px;
+  background: #0d0d1a;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.pixel-stats__label {
+  color: #6b7280;
+  margin-right: 4px;
+}
+
+.pixel-stats__working {
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.pixel-stats__idle {
+  color: #FFE66D;
+  font-weight: bold;
+}
+
+.pixel-stats__available {
+  color: #00FF9F;
+  font-weight: bold;
+}
+
+.pixel-stats__separator {
+  color: #2a2a4a;
+}
+
+/* ── Tooltip ─────────────────────────────────────────────── */
+.pixel-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0d0d1a;
+  border: 2px solid #00FF9F;
+  padding: 8px;
+  font-size: 9px;
+  color: #8da3cb;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  box-shadow: 0 0 8px rgba(0, 255, 159, 0.2);
+  min-width: 160px;
+}
+
+.pixel-tooltip__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.pixel-tooltip__key {
+  color: #4a4a7a;
+}
+
+.pixel-tooltip__value {
+  color: #ffffff;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pixel-desk:hover .pixel-tooltip {
+  opacity: 1;
+}
+
+/* ── Progress Bar ─────────────────────────────────────────── */
+.pixel-progress {
+  width: 100%;
+  height: 8px;
+  background: #1a1a2e;
+  border: 2px solid #2a2a4a;
+  overflow: hidden;
+}
+
+.pixel-progress__fill {
+  height: 100%;
+  background: #00FF9F;
+  transition: width 300ms ease;
+  animation: progress-pulse 2s ease-in-out infinite;
+}
+
+/* ── Empty desk placeholder ──────────────────────────────── */
+.pixel-desk__empty-label {
+  font-size: 9px;
+  color: #4a4a7a;
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: auto;
+  padding-bottom: 8px;
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+
+/* Typing animation - arm movement */
+@keyframes typing-left {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+@keyframes typing-right {
+  0%, 100% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+}
+
+.pixel-agent--working .pixel-agent__arm-left {
+  animation: typing-left 0.5s ease-in-out infinite;
+}
+
+.pixel-agent--working .pixel-agent__arm-right {
+  animation: typing-right 0.5s ease-in-out infinite;
+}
+
+/* Head bob when working */
+@keyframes head-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.pixel-agent--working .pixel-agent__head {
+  animation: head-bob 0.5s ease-in-out infinite;
+}
+
+/* Breathing animation (idle) */
+@keyframes breathing {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(0.97); opacity: 0.92; }
+}
+
+.pixel-agent--idle {
+  animation: breathing 2s ease-in-out infinite;
+}
+
+/* Thinking pose */
+@keyframes thought-pulse {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  40%, 60% { opacity: 1; transform: scale(1); }
+}
+
+.pixel-agent--thinking .pixel-agent__thought {
+  animation: thought-pulse 2s ease-in-out infinite;
+}
+
+/* Thinking head tilt */
+@keyframes think-tilt {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.pixel-agent--thinking .pixel-agent__head {
+  animation: think-tilt 2s ease-in-out infinite;
+}
+
+/* Desk glow for working */
+@keyframes desk-glow-working {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 107, 107, 0.3), 0 0 0 1px #FF6B6B33; }
+  50% { box-shadow: 0 0 16px rgba(255, 107, 107, 0.5), 0 0 0 2px #FF6B6B55; }
+}
+
+/* Desk glow for thinking */
+@keyframes desk-glow-thinking {
+  0%, 100% { box-shadow: 0 0 8px rgba(168, 230, 207, 0.2); }
+  50% { box-shadow: 0 0 16px rgba(168, 230, 207, 0.4); }
+}
+
+/* Blink (status dot) */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* Progress bar pulse */
+@keyframes progress-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Fade-in for appearing agents */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pixel-desk--fade-in {
+  animation: fade-in 300ms ease forwards;
+}
+
+/* Fade-out for disappearing agents */
+@keyframes fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(8px); }
+}
+
+.pixel-desk--fade-out {
+  animation: fade-out 300ms ease forwards;
+}
+
+/* Toggle view button */
+.pixel-toggle-btn {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 2px solid #00FF9F;
+  color: #00FF9F;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background 200ms, color 200ms;
+}
+
+.pixel-toggle-btn:hover {
+  background: #00FF9F;
+  color: #1a1a2e;
+}
+
+/* ── CRT Scanline effect ────────────────────────────────── */
+.pixel-office::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ── Neon flicker on header title ───────────────────────── */
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 0 0 4px #00FF9F, 0 0 8px #00FF9F;
+    opacity: 1;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+    opacity: 0.8;
+  }
+}
+
+.pixel-office__title {
+  animation: neon-flicker 8s linear infinite;
+}
+
+/* ── Screen on animation (initial load) ─────────────────── */
+@keyframes screen-on {
+  0% { opacity: 0; transform: scaleY(0.01); }
+  10% { opacity: 1; transform: scaleY(0.01); }
+  20% { transform: scaleY(1); }
+  100% { transform: scaleY(1); }
+}
+
+.pixel-office {
+  animation: screen-on 0.4s ease-out forwards;
+}
+
+/* ── Desk appear animation ───────────────────────────────── */
+@keyframes desk-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pixel-desk {
+  animation: desk-appear 300ms ease-out forwards;
+}
+
+.pixel-desk:nth-child(1) { animation-delay: 0ms; }
+.pixel-desk:nth-child(2) { animation-delay: 40ms; }
+.pixel-desk:nth-child(3) { animation-delay: 80ms; }
+.pixel-desk:nth-child(4) { animation-delay: 120ms; }
+.pixel-desk:nth-child(5) { animation-delay: 160ms; }
+.pixel-desk:nth-child(6) { animation-delay: 200ms; }
+
+/* ── Cursor blink for empty desks ───────────────────────── */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.pixel-desk--empty .pixel-desk__empty-label::after {
+  content: '_';
+  animation: cursor-blink 1s step-end infinite;
+  color: #4a4a7a;
+}
+
+/* ── Uptime counter color ───────────────────────────────── */
+.pixel-tooltip__value--working {
+  color: #FF6B6B;
+}
+
+.pixel-tooltip__value--idle {
+  color: #FFE66D;
+}
+
+/* ── Stats bar entry animation ──────────────────────────── */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pixel-stats__working,
+.pixel-stats__idle,
+.pixel-stats__available {
+  animation: count-up 300ms ease-out forwards;
+}
+

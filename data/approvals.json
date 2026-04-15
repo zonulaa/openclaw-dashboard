@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ep1-research",
+    "title": "Episode 1 Research — ElevenLabs + Invideo AI",
+    "description": "Research complete. Top 2 tools: ElevenLabs (22% recurring x12mo) + Invideo AI (50% monthly). 3 competitors analyzed. Full report at faceless-agent/research/episode-1-research.md",
+    "priority": "high",
+    "status": "approved",
+    "createdAt": "2026-03-27T10:00:00.000Z",
+    "resolvedAt": "2026-03-27T11:38:00.000Z",
+    "note": "Approved by Zonula"
+  },
+  {
+    "id": "ep1-script",
+    "title": "Episode 1 Script — ElevenLabs voiceover hook",
+    "description": "Script written. Hook: 'Stop! You've been making TikToks wrong the whole time.' 32-second format. Hook score 9/10. Full script at faceless-agent/scripts/upin-ep-01.md",
+    "priority": "high",
+    "status": "approved",
+    "createdAt": "2026-03-27T12:55:00.000Z",
+    "resolvedAt": "2026-03-27T13:59:00.000Z",
+    "note": "Approved by Zonula"
+  },
+  {
+    "id": "ep1-images",
+    "title": "Episode 1 Image Generation — 6 Upin & Ipin scenes",
+    "description": "Generating 6 character images via Leonardo AI for Episode 1 scenes (hook, problem, solution, demo, free tier, CTA).",
+    "priority": "high",
+    "status": "pending",
+    "createdAt": "2026-03-27T14:04:00.000Z",
+    "resolvedAt": null,
+    "note": null
+  }
+]

@@ -1,0 +1,228 @@
+/* ── WALL DECORATIONS ROW ────────────────────────────── */
+.office-deco__wall {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 16px;
+  min-height: 40px;
+  border-bottom: 2px solid #252540;
+}
+
+/* ── CLOCK ───────────────────────────────────────────── */
+.office-deco__clock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.office-deco__clock-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #0a0a1a;
+  border: 1px solid #3a3a5c;
+  border-radius: 2px;
+  padding: 2px 6px;
+}
+
+.office-deco__clock-time {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  color: #00FF9F;
+  letter-spacing: 1px;
+}
+
+.office-deco__clock-label {
+  font-family: 'Courier New', monospace;
+  font-size: 6px;
+  color: #5e7299;
+  letter-spacing: 1px;
+}
+
+.office-deco__clock-icon {
+  font-size: 14px;
+}
+
+/* ── WINDOW ─────────────────────────────────────────── */
+.office-deco__window {
+  display: flex;
+  gap: 2px;
+  border: 2px solid #3a3a5c;
+  border-radius: 2px;
+  padding: 2px;
+  width: 32px;
+  height: 28px;
+}
+
+.office-deco__window-pane {
+  flex: 1;
+  border-radius: 1px;
+  transition: background 1s ease;
+}
+
+.office-deco__window--day .office-deco__window-pane {
+  background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 100%);
+}
+
+.office-deco__window--night .office-deco__window-pane {
+  background: linear-gradient(180deg, #0a0a2e 0%, #1a1a3e 50%, #0a0a2e 100%);
+  box-shadow: inset 1px 1px 0 #ffffff22, inset 3px 5px 0 #ffffff11;
+}
+
+/* ── WHITEBOARD ─────────────────────────────────────── */
+.office-deco__whiteboard {
+  background: #e8e8e8;
+  border: 2px solid #aaa;
+  border-radius: 2px;
+  padding: 3px 6px;
+  min-width: 50px;
+}
+
+.office-deco__whiteboard-title {
+  font-family: 'Courier New', monospace;
+  font-size: 6px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.office-deco__whiteboard-stat {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  font-size: 8px;
+}
+
+/* ── PLANT ──────────────────────────────────────────── */
+.office-deco__plant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.office-deco__plant-leaves {
+  font-size: 14px;
+}
+
+.office-deco__plant-pot {
+  width: 10px;
+  height: 6px;
+  background: #8B4513;
+  border-radius: 0 0 2px 2px;
+}
+
+/* ── COFFEE MACHINE ─────────────────────────────────── */
+.office-deco__coffee {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.office-deco__coffee-icon {
+  font-size: 14px;
+}
+
+.office-deco__coffee-label {
+  font-family: 'Courier New', monospace;
+  font-size: 5px;
+  font-weight: bold;
+  color: #f0c040;
+  letter-spacing: 1px;
+}
+
+/* ── LOGO ────────────────────────────────────────────── */
+.office-deco__logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1a1a2e;
+  border: 1px solid #f0c040;
+  border-radius: 2px;
+  padding: 2px 6px;
+}
+
+.office-deco__logo-text {
+  font-family: 'Courier New', monospace;
+  font-size: 7px;
+  font-weight: bold;
+  color: #f0c040;
+  letter-spacing: 1px;
+}
+
+.office-deco__logo-sub {
+  font-family: 'Courier New', monospace;
+  font-size: 5px;
+  color: #8295bc;
+  letter-spacing: 2px;
+}
+
+/* ── TROPHY SHELF ───────────────────────────────────── */
+.office-deco__trophy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.office-deco__trophy-icon {
+  font-size: 16px;
+}
+
+.office-deco__trophy-count {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  font-weight: bold;
+  color: #f0c040;
+  background: #0a0a1a;
+  padding: 0 4px;
+  border-radius: 2px;
+  border: 1px solid #f0c04044;
+}
+
+/* ── FLOOR DECORATIONS ──────────────────────────────── */
+.office-deco__floor {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 24px;
+  min-height: 20px;
+}
+
+.office-deco__waffle {
+  font-size: 16px;
+  animation: waffle-walk 8s linear infinite;
+}
+
+@keyframes waffle-walk {
+  0% { transform: translateX(0) scaleX(1); }
+  45% { transform: translateX(-200px) scaleX(1); }
+  50% { transform: translateX(-200px) scaleX(-1); }
+  95% { transform: translateX(0) scaleX(-1); }
+  100% { transform: translateX(0) scaleX(1); }
+}
+
+/* ── LED STRIP (Phase 4) ────────────────────────────── */
+.office-deco__led-strip {
+  height: 3px;
+  width: 100%;
+  border-radius: 1px;
+  transition: background 1s ease;
+}
+
+.office-deco__led-strip--green {
+  background: linear-gradient(90deg, transparent, #00b894, #00FF9F, #00b894, transparent);
+  box-shadow: 0 0 6px rgba(0, 184, 148, 0.4);
+}
+
+.office-deco__led-strip--yellow {
+  background: linear-gradient(90deg, transparent, #FFE66D, #f0c040, #FFE66D, transparent);
+  box-shadow: 0 0 6px rgba(255, 230, 109, 0.4);
+}
+
+.office-deco__led-strip--red {
+  background: linear-gradient(90deg, transparent, #FF6B6B, #ff4444, #FF6B6B, transparent);
+  box-shadow: 0 0 6px rgba(255, 107, 107, 0.4);
+}
