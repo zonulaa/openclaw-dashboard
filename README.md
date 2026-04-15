@@ -1,3 +1,14 @@
+> ⚠️ **LICENSED MATERIAL — DO NOT REDISTRIBUTE**
+>
+> This source code is the exclusive property of **Derrick Tantra** (meetbob.tech).
+> Redistribution, selling, or publishing this code in any form is **strictly prohibited**
+> and will result in **legal action** under Indonesian copyright law (UU Hak Cipta No. 28 Tahun 2014)
+> and the Berne Convention.
+>
+> By accessing this repository, you agree to the full terms in [LICENSE](./LICENSE).
+>
+---
+
 # OpenClaw Dashboard
 
 A universal dashboard for managing your [OpenClaw](https://github.com/nickthecook/openclaw) AI agent fleet. Monitor live sessions, manage tasks, coordinate agents, and view your digital office — all from a single, real-time control surface.
