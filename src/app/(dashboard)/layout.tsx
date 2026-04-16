@@ -11,6 +11,7 @@ import { ToastProvider } from "@/components/ui/toast";
 import { usePathname } from "next/navigation";
 import { NAV_ROUTES } from "@/components/nav-routes";
 import { V2GlobalEffects } from "@/components/v2-overlay";
+import { VoiceChatFAB } from "@/components/voice-chat/VoiceChatFAB";
 
 // Lazy-load the heavy CreateEventModal (562 lines) — only needed when user opens it
 const CreateEventModal = dynamic(
@@ -123,6 +124,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <CreateEventFAB />
         <CreateEventModal />
         <CreateEventKeyboardShortcut />
+      </ErrorBoundary>
+
+      {/* ── Floating Voice Chat Widget Toggle ── */}
+      <ErrorBoundary label="VoiceChatFAB">
+        <VoiceChatFAB />
       </ErrorBoundary>
     </div>
     </ToastProvider>

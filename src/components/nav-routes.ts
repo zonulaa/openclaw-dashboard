@@ -4,6 +4,7 @@ import {
   Building2,
   LayoutDashboard,
   MessageSquare,
+  Mic,
   Timer,
 
   type LucideIcon,
@@ -74,6 +75,14 @@ export const NAV_ROUTES: NavRoute[] = [
     title: "Agent Inbox",
     summary: "Multi-agent communications -- threads and workflows.",
     icon: MessageSquare,
+    group: "AGENTS",
+  },
+  {
+    id: "voice-chat",
+    href: "/voice-chat",
+    title: "Voice Chat",
+    summary: "Talk to your AI agent via voice -- push-to-talk interface.",
+    icon: Mic,
     group: "AGENTS",
   },
 ];
