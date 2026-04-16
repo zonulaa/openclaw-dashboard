@@ -196,7 +196,7 @@ function ConstellationLines({ members }: { members: OfficeMember[] }) {
     return () => ctx.revert()
   }, [members])
 
-  // Position orbs in a tree: Bob center-top, children spread below
+  // Position orbs in a tree: Agent center-top, children spread below
   const positions = useMemo(() => {
     const pos: Record<string, { x: number; y: number }> = {}
     const centerX = 50

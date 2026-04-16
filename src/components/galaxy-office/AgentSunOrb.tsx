@@ -5,7 +5,7 @@ import gsap from 'gsap'
 import type { OfficeMember } from '@/lib/digital-office-live'
 import { PlanetCanvas } from './PlanetCanvas'
 
-type BobSunOrbProps = {
+type AgentSunOrbProps = {
   member: OfficeMember | null
   activeSubAgentCount: number
   isSelected: boolean
@@ -28,9 +28,9 @@ const STYLES = `
 const SZ = 140  // total container
 const STAR_SZ = 100  // star canvas
 
-export default function BobSunOrb({
+export default function AgentSunOrb({
   member, activeSubAgentCount, isSelected, onClick, modelName,
-}: BobSunOrbProps) {
+}: AgentSunOrbProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Entrance
