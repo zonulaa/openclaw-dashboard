@@ -23,7 +23,7 @@ A universal dashboard for managing your [OpenClaw](https://github.com/nickthecoo
 
 ```bash
 # Clone the repository
-git clone <repo-url> openclaw-dashboard
+git clone https://github.com/zonulaa/openclaw-dashboard.git
 cd openclaw-dashboard
 
 # Install dependencies
