@@ -18,7 +18,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# local env files
+# env files
+.env
 .env*.local
 
 # local data persistence
@@ -27,9 +28,7 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-projects/cltm/helloworld/
-projects/koto-koto/tdl/
-node_modules
-.next
-.DS_Store
-*.pem
+
+# logs
+/logs
+*.log

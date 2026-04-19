@@ -1,13 +1,7 @@
 {
-  "affiliateLinks": [
-    { "tool": "elevenlabs", "url": "https://try.elevenlabs.io/cko8uka1firr", "clicks": 0, "revenueRp": 0 },
-    { "tool": "invideo", "url": "meetbob.tech/go/invideo", "clicks": 0, "revenueRp": 0 },
-    { "tool": "canva", "url": "meetbob.tech/go/canva", "clicks": 0, "revenueRp": 0 },
-    { "tool": "notion", "url": "meetbob.tech/go/notion", "clicks": 0, "revenueRp": 0 },
-    { "tool": "hostinger", "url": "meetbob.tech/go/hostinger", "clicks": 0, "revenueRp": 0 }
-  ],
-  "monthlyRevenueTargetRp": 3000000,
-  "totalEpisodes": 1,
+  "affiliateLinks": [],
+  "monthlyRevenueTargetRp": 0,
+  "totalEpisodes": 0,
   "postedEpisodes": 0,
-  "updatedAt": "2026-03-27T14:04:00.000Z"
+  "updatedAt": null
 }
