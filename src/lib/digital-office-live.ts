@@ -532,30 +532,30 @@ function toMembersFromSessions(sessions: SessionLike[]): OfficeMember[] {
   })
 }
 
-// ── Static Agent Registry ────────────────────────────────────────────────────
-// All registered agents always appear, even when they have no active sessions.
+// ── Agent Registry (auto-discovered) ─────────────────────────────────────────
+// Every subdirectory of ~/.openclaw/agents/ becomes a registered agent so it
+// always shows in the office grid even when offline. The author's personal
+// agents are no longer hardcoded here — that was a pre-publish bug where
+// "Community Bot" and "Claude Code" appeared on every student's dashboard.
 
-const STATIC_AGENT_DEFAULTS: Record<string, Partial<OfficeMember>> = {
-  main: { id: 'static:main', name: 'Main Agent', role: 'Orchestrator', avatar: '🤖', source: 'static', status: 'idle', workstation: 'Main HQ', details: 'static registry', live: { sessionId: '', agentId: 'main', rawKey: 'agent:main:main', isMain: true } },
+import { discoverInstalledAgents, type AgentInfo } from './agent-discovery'
 
-  community: { id: 'static:community', name: '🤖 Community Bot', role: 'Group Chat', avatar: '🤖', source: 'static', status: 'offline', workstation: 'Community Desk', details: 'static registry', live: { sessionId: '', agentId: 'community', rawKey: 'agent:community:main', isMain: true } },
-  claude: { id: 'static:claude', name: 'Claude Code', role: 'Dev Agent', avatar: '💻', source: 'static', status: 'offline', workstation: 'Claude Desk', details: 'static registry', live: { sessionId: '', agentId: 'claude', rawKey: 'agent:claude:main', isMain: true } },
-}
-
-const STATIC_AGENT_ORDER = ['main', 'community', 'claude']
-
-function buildStaticMember(agentId: string): OfficeMember {
-  const defaults = STATIC_AGENT_DEFAULTS[agentId]
+function buildStaticMember(agent: AgentInfo): OfficeMember {
   return {
-    id: defaults?.id ?? `static:${agentId}`,
-    name: (defaults?.name as string) ?? agentId,
-    role: (defaults?.role as string) ?? 'Agent',
-    workstation: (defaults?.workstation as string) ?? `${agentId} Desk`,
-    avatar: (defaults?.avatar as string) ?? '🤖',
+    id: `static:${agent.id}`,
+    name: agent.label,
+    role: agent.id === 'main' ? 'Orchestrator' : 'Agent',
+    workstation: agent.id === 'main' ? 'Main HQ' : `${agent.label} Desk`,
+    avatar: agent.emoji,
     source: 'static',
-    status: (defaults?.status as string) ?? 'offline',
+    status: 'offline',
     details: 'static registry',
-    live: defaults?.live ?? { sessionId: '', agentId, rawKey: `agent:${agentId}:main`, isMain: true },
+    live: {
+      sessionId: '',
+      agentId: agent.id,
+      rawKey: `agent:${agent.id}:main`,
+      isMain: true,
+    },
     ops: { canRefresh: true, canStop: false, stopGuard: 'static profile' },
   }
 }
@@ -865,28 +865,26 @@ export async function getDigitalOfficeSnapshot(): Promise<DigitalOfficeSnapshot>
   }
 
   const members: OfficeMember[] = []
-  for (const agentId of STATIC_AGENT_ORDER) {
-    const liveSessions = liveByAgentId.get(agentId)
+  const installedAgents = await discoverInstalledAgents()
+  for (const agent of installedAgents) {
+    const liveSessions = liveByAgentId.get(agent.id)
     if (liveSessions && liveSessions.length > 0) {
-      // Use live data; for the "primary" entry, merge missing fields from static defaults
-      const staticDefaults = STATIC_AGENT_DEFAULTS[agentId]
       for (const lm of liveSessions) {
-        if (staticDefaults && lm.live?.isMain) {
-          // Fill in missing fields from static defaults
-          if (!lm.workstation || lm.workstation.startsWith('Runtime')) {
-            lm.workstation = (staticDefaults.workstation as string) ?? lm.workstation
-          }
+        if (lm.live?.isMain && (!lm.workstation || lm.workstation.startsWith('Runtime'))) {
+          lm.workstation = agent.id === 'main' ? 'Main HQ' : `${agent.label} Desk`
         }
         members.push(lm)
       }
-      liveByAgentId.delete(agentId)
+      liveByAgentId.delete(agent.id)
     } else {
-      // No live session — use static default
-      members.push(buildStaticMember(agentId))
+      // No live session — show the agent as offline placeholder so the desk
+      // is visible (matches "always appears" UX while no longer hardcoding identities).
+      members.push(buildStaticMember(agent))
     }
   }
 
-  // Append any remaining live sessions not in static registry (e.g. codex, gemini)
+  // Append any remaining live sessions not in the discovered agent registry
+  // (e.g. ephemeral cli sessions, codex/gemini one-shots).
   for (const [, liveSessions] of liveByAgentId) {
     members.push(...liveSessions)
   }

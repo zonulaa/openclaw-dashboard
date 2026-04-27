@@ -160,8 +160,11 @@ export async function POST(request: NextRequest) {
     const fs = await import('fs/promises')
     const path = await import('path')
 
-    // Search all agent sessions.json files
-    const agentDirs = ['main', 'community', 'claude', 'codex', 'gemini']
+    // Discover all installed agent dirs (was hardcoded to the author's
+    // personal install: main / community / claude / codex / gemini).
+    const { discoverInstalledAgents } = await import('@/lib/agent-discovery')
+    const installedAgents = await discoverInstalledAgents()
+    const agentDirs = installedAgents.map(a => a.dir)
     const targetId = body.memberId ? String(body.memberId).trim() : ''
 
     try {

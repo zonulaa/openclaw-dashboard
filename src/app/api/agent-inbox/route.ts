@@ -1,17 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { AGENTS_BASE, discoverInstalledAgents } from "@/lib/agent-discovery";
 
 export const runtime = "nodejs";
-
-const HOME = process.env.HOME ?? "/Users/user";
-const AGENTS_BASE = join(HOME, ".openclaw/agents");
-
-// ── Dynamic agent list from env ──────────────────────────────────
-const CONFIGURED_AGENTS = (process.env.OPENCLAW_AGENTS ?? "agent-alpha,agent-beta,agent-gamma")
-  .split(",")
-  .map(s => s.trim())
-  .filter(Boolean);
 
 // ── Agent config ──────────────────────────────────────────────────
 type AgentConfig = {
@@ -28,52 +20,36 @@ type AgentConfig = {
   includeSession?: (key: string, meta: SessionMeta, summary?: string) => boolean;
 };
 
-function buildAgentConfigs(): Record<string, AgentConfig> {
-  const configs: Record<string, AgentConfig> = {
-    main: {
-      dirs: ["main"],
-      label: "Main",
-      emoji: "\u{1F9A5}",
-      mainPatterns: [/^agent:main:main$/],
-      subagentPatterns: [/^agent:main:subagent:/],
-      extraPatterns: [/^agent:main:telegram:direct:/, /^agent:main:telegram:group:/, /^agent:main:telegram:slash:/],
-    },
-    community: {
-      dirs: ["community"],
-      label: "Community",
-      emoji: "\u{1F4AC}",
-      mainPatterns: [/^agent:community:telegram:group:/],
-      subagentPatterns: [/^agent:community:subagent:/],
-      extraPatterns: [/^agent:community:telegram:slash:/],
-    },
-    "claude-code": {
-      dirs: ["claude"],
-      label: "Claude Code / ACP",
-      emoji: "\u{1F4BB}",
-      mainPatterns: [/^agent:claude:acp:/],
-      subagentPatterns: [],
-      extraPatterns: [/^agent:claude:telegram:/],
-    },
-  };
+// Build configs by scanning ~/.openclaw/agents/ at request time. Every
+// directory there becomes an entry; the agent's session keys live under
+// `agent:<id>:...` so the patterns below are uniform across agent types
+// (a freshly-installed "lena" gets the same buckets as "main").
+async function buildAgentConfigs(): Promise<Record<string, AgentConfig>> {
+  const configs: Record<string, AgentConfig> = {};
+  const installed = await discoverInstalledAgents();
 
-  // Add dynamically configured agents
-  for (const agentId of CONFIGURED_AGENTS) {
-    if (configs[agentId]) continue; // skip if already defined
-    const safeName = agentId.replace(/[^a-zA-Z0-9_-]/g, "");
-    configs[agentId] = {
-      dirs: [safeName],
-      label: titleCase(safeName),
-      emoji: "\u{1F916}",
-      mainPatterns: [new RegExp(`^agent:${safeName}:main$`), new RegExp(`^agent:${safeName}:telegram:group:`)],
-      subagentPatterns: [new RegExp(`^agent:${safeName}:subagent:`)],
-      extraPatterns: [new RegExp(`^agent:${safeName}:telegram:slash:`)],
+  for (const agent of installed) {
+    const id = agent.id;
+    configs[id] = {
+      dirs: [agent.dir],
+      label: agent.label,
+      emoji: agent.emoji,
+      mainPatterns: [
+        new RegExp(`^agent:${id}:main$`),
+        new RegExp(`^agent:${id}:telegram:group:`),
+        new RegExp(`^agent:${id}:acp:`),
+      ],
+      subagentPatterns: [new RegExp(`^agent:${id}:subagent:`)],
+      extraPatterns: [
+        new RegExp(`^agent:${id}:telegram:direct:`),
+        new RegExp(`^agent:${id}:telegram:slash:`),
+        new RegExp(`^agent:${id}:cron:`),
+      ],
     };
   }
 
   return configs;
 }
-
-const AGENT_CONFIGS = buildAgentConfigs();
 
 // ── Types ─────────────────────────────────────────────────────────
 type SessionMeta = {
@@ -425,6 +401,7 @@ export async function GET(req: NextRequest) {
     const recencyCutoff = Date.now() - RECENCY_CUTOFF_MS;
     const ACTIVE_STATES = new Set(["running", "active", "failed", "error"]);
 
+    const AGENT_CONFIGS = await buildAgentConfigs();
     for (const [agentId, config] of Object.entries(AGENT_CONFIGS)) {
       const sessions: InboxSession[] = [];
 

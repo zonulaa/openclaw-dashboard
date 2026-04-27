@@ -1,72 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
+import { AGENTS_BASE, discoverInstalledAgents } from "@/lib/agent-discovery";
 
 export const runtime = "nodejs";
 
-const HOME = process.env.HOME ?? "/Users/user";
-const AGENTS_BASE = join(HOME, ".openclaw/agents");
-
 /**
- * Dynamic agent tab configuration.
+ * Tab config per discovered agent.
  *
- * Instead of hardcoding agent names, we discover available agents from the
- * filesystem at startup and build patterns automatically. Users can also
- * define custom tab configs via AGENT_CHAT_TABS env var (JSON array of
- * { tab, dirs, patterns } objects).
- *
- * Default behavior per agent dir found under ~/.openclaw/agents/:
- *   - tab name = dir name
- *   - includes main + subagent session keys for that agent
- *   - "community" agents also include telegram:group sessions
- *   - "claude" agents include acp sessions
+ * Each subdirectory of ~/.openclaw/agents/ becomes one tab. Patterns are
+ * uniform: an agent's main session is `agent:<id>:main`, subagents live at
+ * `agent:<id>:subagent:*`, and we also surface telegram + ACP session keys
+ * so a Telegram-driven or Claude-Code-driven agent isn't invisible.
  */
 type TabConfig = { dirs: string[]; includePatterns: RegExp[]; showAllPatterns?: RegExp[] };
 
-function buildDefaultTabConfig(): Record<string, TabConfig> {
+async function buildDefaultTabConfig(): Promise<Record<string, TabConfig>> {
   const config: Record<string, TabConfig> = {};
+  const installed = await discoverInstalledAgents();
 
-  // Try to discover agent dirs from the filesystem at module load
-  // Fallback to a minimal set if the directory doesn't exist
-  let agentDirs: string[] = [];
-  try {
-    const fs = require("node:fs");
-    const entries = fs.readdirSync(AGENTS_BASE, { withFileTypes: true });
-    agentDirs = entries.filter((e: { isDirectory: () => boolean }) => e.isDirectory()).map((e: { name: string }) => e.name);
-  } catch {
-    agentDirs = ["main", "claude", "community"];
-  }
-
-  for (const dir of agentDirs) {
-    if (dir === "claude") {
-      config["claude-code"] = {
-        dirs: [dir],
-        includePatterns: [/^agent:claude:acp:/],
-      };
-    } else if (dir === "community") {
-      config[dir] = {
-        dirs: [dir],
-        includePatterns: [
-          new RegExp(`^agent:${dir}:telegram:group:`),
-          new RegExp(`^agent:${dir}:subagent:`),
-        ],
-      };
-    } else {
-      // Generic agent: include main + subagent sessions
-      config[dir] = {
-        dirs: [dir],
-        includePatterns: [
-          new RegExp(`^agent:${dir}:main$`),
-          new RegExp(`^agent:${dir}:subagent:`),
-        ],
-      };
-    }
+  for (const agent of installed) {
+    const id = agent.id;
+    config[id] = {
+      dirs: [agent.dir],
+      includePatterns: [
+        new RegExp(`^agent:${id}:main$`),
+        new RegExp(`^agent:${id}:subagent:`),
+        new RegExp(`^agent:${id}:telegram:group:`),
+        new RegExp(`^agent:${id}:acp:`),
+      ],
+    };
   }
 
   return config;
 }
-
-const TAB_CONFIG = buildDefaultTabConfig();
 
 // Patterns that look like base64 image data
 const BASE64_RE = /(?:\/9j\/|iVBOR|data:image\/)[A-Za-z0-9+/=]{100,}/g;
@@ -242,17 +209,14 @@ export async function GET(req: NextRequest) {
   const sinceParam = searchParams.get("since"); // ISO date string or null for "all"
   const showAll = searchParams.get("showAll") === "true";
 
+  const TAB_CONFIG = await buildDefaultTabConfig();
   const config = TAB_CONFIG[agentParam];
   if (!config) {
     return NextResponse.json({ ok: false, error: "Unknown agent", messages: [] });
   }
 
-  // Use expanded patterns when showAll is true (includes ACP for main tab)
   const patterns = (showAll && config.showAllPatterns) ? config.showAllPatterns : config.includePatterns;
-  // When showAll, main tab also needs to scan the claude agent dir for ACP sessions
-  const dirs = (showAll && config.showAllPatterns && agentParam === "main")
-    ? [...new Set([...config.dirs, "claude"])]
-    : config.dirs;
+  const dirs = config.dirs;
 
   try {
     // Collect session files from all configured dirs
