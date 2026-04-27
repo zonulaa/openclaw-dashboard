@@ -45,19 +45,17 @@ function TabBar({ tabs, active, onChange }: {
 }
 
 const TABS = [
-  { id: 'overview', label: '📊 Overview' },
-  { id: 'crons', label: '⏰ Crons' },
   { id: 'classic', label: '🌌 Command Center' },
+  { id: 'crons', label: '⏰ Crons' },
 ];
 
-import AgentOverviewContent from '@/app/(dashboard)/digital-office/AgentOverviewContent';
 import CronStatusContent from '@/app/(dashboard)/digital-office/CronStatusContent';
 import DigitalOfficeV2Content from '@/app/(dashboard)/digital-office/DigitalOfficeV2Content';
 
 function DigitalOfficePageInner() {
   const searchParams = useSearchParams();
   const paramTab = searchParams.get('tab');
-  const validTabs = ['overview', 'crons', 'classic'];
+  const validTabs = ['classic', 'crons'];
   const initialTab = validTabs.includes(paramTab ?? '') ? (paramTab as string) : 'classic';
   const [activeTab, setActiveTab] = useState(initialTab);
 
@@ -67,9 +65,8 @@ function DigitalOfficePageInner() {
         <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
       </div>
       <div style={{ padding: '0 1.25rem 1.25rem' }}>
-        {activeTab === 'overview' && <AgentOverviewContent />}
-        {activeTab === 'crons' && <CronStatusContent />}
         {activeTab === 'classic' && <DigitalOfficeV2Content />}
+        {activeTab === 'crons' && <CronStatusContent />}
       </div>
     </div>
   );

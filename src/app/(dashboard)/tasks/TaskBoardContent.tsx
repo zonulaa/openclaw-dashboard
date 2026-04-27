@@ -328,7 +328,7 @@ function MobileCommandCenter({ tasks, onStatusChange, onSubtaskToggle, onSubtask
           <MobileTaskCard key={task.id} task={task} accent="#eab308" titleColor="#fde68a" bgColor="rgba(234,179,8,0.07)" borderColor="rgba(234,179,8,0.2)" onSubtaskToggle={onSubtaskToggle} onSubtaskReorder={onSubtaskReorder} onSubtaskDelete={onSubtaskDelete} onSubtaskEdit={onSubtaskEdit} onOpenUI={onOpenUI} onCloseUI={onCloseUI} />
         ))}
       </Section>
-      <Section id="working" accent="#38bdf8" headerText="⚙️ BOB LAGI KERJA">
+      <Section id="working" accent="#38bdf8" headerText="⚙️ IN PROGRESS">
         {workingTasks.length === 0 ? (
           <p style={{ fontSize: "0.78rem", color: "#94a3b8" }}>Belum ada yang dikerjain 😴</p>
         ) : workingTasks.map((task) => (
