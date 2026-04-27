@@ -569,6 +569,20 @@ export default function TaskBoardContent() {
   const openModal = () => { setEditingId(null); setForm({ title: "", description: "", assignee: "me", status: "todo", dueAt: "", createCalendarReminder: false }); setShowTaskModal(true); handleOpenUI(); };
   const closeModal = () => { setShowTaskModal(false); setEditingId(null); setError(""); handleCloseUI(); };
 
+  const resetAll = async () => {
+    const ok = window.confirm(
+      "Hapus SEMUA tasks + activity log?\n\nIni nge-clear .data/task-board.json di mesin lo. Gak bisa di-undo.",
+    );
+    if (!ok) return;
+    try {
+      await fetch("/api/task-board", { method: "DELETE" });
+      setTasks([]);
+      await refreshNow();
+    } catch {
+      // refreshNow will surface any post-reset fetch error via the existing error state
+    }
+  };
+
   return (
     <ScreenWrapper eyebrow="Work · Tasks" title="Task Board" description="Track tasks across todo, in-progress, review, and done." maxWidth="max-w-7xl">
       <div className="flex flex-wrap items-center gap-2" role="status">
@@ -599,10 +613,21 @@ export default function TaskBoardContent() {
         </div>
       )}
 
-      <div>
+      <div className="flex flex-wrap items-center gap-2">
         <button type="button" onClick={openModal} className="px-4 py-2 text-xs font-semibold rounded-lg cursor-pointer flex items-center gap-2" style={{ background: "rgba(0,212,255,0.1)", border: "1px solid rgba(0,212,255,0.25)", color: "#77adff", fontFamily: "Courier New, monospace", letterSpacing: "0.04em" }}>
           <span style={{ fontSize: "14px", lineHeight: 1 }}>＋</span> Create New Task
         </button>
+        {tasks.length > 0 && (
+          <button
+            type="button"
+            onClick={resetAll}
+            title="Hapus semua tasks (clear .data/task-board.json)"
+            className="px-3 py-2 text-xs font-semibold rounded-lg cursor-pointer flex items-center gap-2"
+            style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontFamily: "Courier New, monospace", letterSpacing: "0.04em" }}
+          >
+            🗑 Reset All
+          </button>
+        )}
       </div>
 
       {(showTaskModal || editingId) && (

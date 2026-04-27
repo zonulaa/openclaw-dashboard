@@ -268,3 +268,13 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ ok: true, task });
 }
+
+// DELETE /api/task-board (no id) → wipe everything (tasks + activityLog).
+// Per-task DELETE lives at /api/task-board/[id]; this is the "reset to empty"
+// escape hatch the UI exposes for fresh installs and accidental imports.
+// Each user's `.data/task-board.json` is local to their machine, so this is
+// always scoped to the caller — no auth check needed.
+export async function DELETE() {
+  await writeTaskBoardData({ tasks: [], activityLog: [] });
+  return NextResponse.json({ ok: true });
+}
